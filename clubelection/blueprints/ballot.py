@@ -1,14 +1,16 @@
 from flask import Blueprint, request
 
+from clubelection.auth import Authenticator
 from clubelection.committee import Committee, CommitteeError
 from clubelection.serialization import denormalizer, DenormalizerError
 from clubelection.models import Ballot, Voter
 
 
-def create_blueprint(committee: Committee) -> Blueprint:
+def create_blueprint(committee: Committee, authenticator: Authenticator) -> Blueprint:
     blueprint: Blueprint = Blueprint('ballot', __name__, url_prefix='/api')
 
     @blueprint.route('/ballot', methods=['POST'])
+    @authenticator.authenticate(request)
     def post_ballot():
         try:
             ballot: Ballot = denormalizer.denormalize(request.json, Ballot)
