@@ -9,7 +9,7 @@ from werkzeug.exceptions import Unauthorized, Forbidden
 from clubelection.auth import Authenticator
 from clubelection.blueprints import ballot, candidate, auth
 from clubelection.committee import Committee
-from clubelection.error_handlers import handle_unauthorized, handle_forbidden
+from clubelection.error_handlers import handle_unauthorized, handle_forbidden, handle_exception
 from clubelection.serialization import normalizer
 from clubelection.database import init_database
 from clubelection.models import Candidate
@@ -34,5 +34,6 @@ def create_app() -> Flask:
 
     app.register_error_handler(Unauthorized, handle_unauthorized)
     app.register_error_handler(Forbidden, handle_forbidden)
+    app.register_error_handler(Exception, handle_exception)
 
     return app

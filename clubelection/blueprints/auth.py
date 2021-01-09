@@ -10,7 +10,7 @@ def create_blueprint(authenticator: Authenticator) -> Blueprint:
     @blueprint.route('/auth', methods=['POST'])
     def login():
         if 'access_code' not in request.json:
-            raise Unauthorized()
+            raise Unauthorized('Missing credentials')
 
         token: dict = authenticator.login(request.json['access_code'])
         return jsonify(token)

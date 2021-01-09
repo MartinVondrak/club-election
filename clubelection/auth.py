@@ -21,7 +21,7 @@ class Authenticator:
         try:
             voter: Voter = self.session.query(Voter).filter_by(access_code=access_code).one()
         except NoResultFound:
-            raise Unauthorized('Login failed.')
+            raise Unauthorized('Invalid credentials')
         return {
             'access_token': jwt.encode(
                 {'voter_id': voter.id, 'exp': time() + 3600, 'access_code': access_code},
@@ -37,7 +37,7 @@ class Authenticator:
                 token: dict = self.decode_jwt_token(jwt_token)
                 is_authenticated: bool = self.authenticate_token(token)
                 if not is_authenticated:
-                    raise Forbidden('User not logged in.')
+                    raise Forbidden('Not logged in')
                 return func(*args, **kwargs)
 
             return wrapped_func
